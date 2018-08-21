@@ -17,11 +17,11 @@ def dni_validator(nif):
         letraControl = nif[8].upper()
         dni = nif[:8]
         try:
-          int(dni)
+            int(dni)
         except ValueError:
             raise ValidationError(_('DNI Invalido. Introduce 8 '
                                     'numeros y una letra'))
-        if ( len(dni) == len( [n for n in dni if n in numeros] ) ):
+        if (len(dni) == len([n for n in dni if n in numeros])):
             if tabla[int(dni) % 23] != letraControl:
                 raise ValidationError(_('DNI Invalido'))
     else:
@@ -55,8 +55,10 @@ def telefono_validator(tlf):
 class CustomUser(AbstractUser):
     # Override AbstractUser atributes
     #
-    first_name = models.CharField(_('first name'), max_length=30, blank=False, null=False)
-    last_name = models.CharField(_('last name'), max_length=150, blank=False, null=False)
+    first_name = models.CharField(_('first name'), max_length=30,
+                                  blank=False, null=False)
+    last_name = models.CharField(_('last name'), max_length=150,
+                                 blank=False, null=False)
 
     email = models.EmailField(_('email address'), blank=False, null=False)
 

@@ -4,6 +4,7 @@ from django.contrib.auth.admin import UserAdmin
 
 from .models import CustomUser
 
+
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
     fieldsets = (
@@ -15,7 +16,7 @@ class CustomUserAdmin(UserAdmin):
             'fields': ('first_name', 'last_name', 'direccion',
                        'ciudad', 'codigo_postal',
                        'provincia', 'telefono_fijo', 'telefono_movil',
-                       'dni', 'profesion', 'fecha_nacimiento','pagado'),
+                       'dni', 'profesion', 'fecha_nacimiento', 'pagado'),
         }),
         ('Permisos', {
             'fields': ('is_active', 'is_staff', 'is_superuser',
