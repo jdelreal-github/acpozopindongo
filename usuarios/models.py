@@ -6,9 +6,10 @@ from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
-
+from django.db.models import Max
 
 # Validadores
+
 
 def dni_validator(nif):
     tabla = "TRWAGMYFPDXBNJZSQVHLCKE"
@@ -55,6 +56,7 @@ def telefono_validator(tlf):
 class CustomUser(AbstractUser):
     # Override AbstractUser atributes
     #
+
     first_name = models.CharField(_('first name'), max_length=30,
                                   blank=False, null=False)
     last_name = models.CharField(_('last name'), max_length=150,
@@ -115,10 +117,22 @@ class CustomUser(AbstractUser):
                            null=True,
                            blank=True)
 
-    numero_socio = models.IntegerField(verbose_name='Número de Socio',
-                                       default=0)
+    numero_socio = models.PositiveSmallIntegerField(
+        verbose_name='Número de Socio',
+        default=0,
+        null=True,
+        blank=True)
 
     profesion = models.CharField(verbose_name='Profesión',
                                  max_length=100,
                                  null=True,
                                  blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.numero_socio == 0 and \
+                        CustomUser.objects.aggregate(Max('numero_socio'))[
+                            'numero_socio__max'] is not None:
+            self.numero_socio = \
+                int(CustomUser.objects.aggregate(Max('numero_socio'))[
+                        'numero_socio__max']) + 1
+        super(CustomUser, self).save(*args, **kwargs)

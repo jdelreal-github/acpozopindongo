@@ -27,4 +27,6 @@ class CustomUserAdmin(UserAdmin):
         }),
     )
 
+    list_filter = ('is_staff', 'is_superuser', 'is_active', 'pagado')
+
 admin.site.register(CustomUser, CustomUserAdmin)
