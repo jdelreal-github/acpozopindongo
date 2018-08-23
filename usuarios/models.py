@@ -117,11 +117,10 @@ class CustomUser(AbstractUser):
                            null=True,
                            blank=True)
 
-    numero_socio = models.PositiveSmallIntegerField(
-        verbose_name='Número de Socio',
-        default=0,
-        null=True,
-        blank=True)
+    numero_socio = models.IntegerField(verbose_name='Número de Socio',
+                                       default=0,
+                                       null=True,
+                                       blank=True)
 
     profesion = models.CharField(verbose_name='Profesión',
                                  max_length=100,
