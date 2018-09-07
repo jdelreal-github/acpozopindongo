@@ -135,3 +135,10 @@ class CustomUser(AbstractUser):
                 int(CustomUser.objects.aggregate(Max('numero_socio'))[
                         'numero_socio__max']) + 1
         super(CustomUser, self).save(*args, **kwargs)
+
+
+class DailyTaskClass(models.Model):
+    '''
+    Dummy class to be use with the DailyTasksSerializer
+    '''
+    dummy = models.CharField(max_length=10)
