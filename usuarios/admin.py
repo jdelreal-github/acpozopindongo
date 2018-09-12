@@ -100,8 +100,10 @@ class CustomUserAdmin(UserAdmin):
     def paid(self, request, queryset):
         try:
             for user in queryset:
-                user.pagado = True
-                user.save()
+                if user.pagado == False:
+                    user.pagado = True
+                    user.save()
+                    self.log_addition(request, user, 'Modificado pagado.')
             self.message_user(request,
                               _('Cambio a PAGADO Correcto'),
                               messages.SUCCESS)
@@ -117,8 +119,11 @@ class CustomUserAdmin(UserAdmin):
     def not_paid(self, request, queryset):
         try:
             for user in queryset:
-                user.pagado = False
-                user.save()
+                if user.pagado == True:
+                    user.pagado = False
+                    user.save()
+                    self.log_addition(request, user, 'Modificado pagado.')
+
             self.message_user(request,
                               _('Cambio a NO PAGADO Correcto'),
                               messages.SUCCESS)
