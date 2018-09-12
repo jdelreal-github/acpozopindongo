@@ -95,7 +95,41 @@ class CustomUserAdmin(UserAdmin):
     )
 
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'pagado', 'groups')
-    actions = ['send_email']
+    actions = ['send_email', 'paid', 'not_paid']
+
+    def paid(self, request, queryset):
+        try:
+            for user in queryset:
+                user.pagado = True
+                user.save()
+            self.message_user(request,
+                              _('Cambio a PAGADO Correcto'),
+                              messages.SUCCESS)
+
+        except Exception as ex:
+            self.message_user(request,
+                              _('Cambio a PAGADO Erroneo'),
+                              messages.ERROR)
+
+    paid.short_description = \
+        gettext_lazy("Pagado %(verbose_name_plural)s")
+
+    def not_paid(self, request, queryset):
+        try:
+            for user in queryset:
+                user.pagado = False
+                user.save()
+            self.message_user(request,
+                              _('Cambio a NO PAGADO Correcto'),
+                              messages.SUCCESS)
+
+        except Exception as ex:
+            self.message_user(request,
+                              _('Cambio a PAGADO Erroneo'),
+                              messages.ERROR)
+
+    not_paid.short_description = \
+        gettext_lazy("No pagado %(verbose_name_plural)s")
 
     def send_email(self, request, queryset):
         """
