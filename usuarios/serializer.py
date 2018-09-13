@@ -3,6 +3,8 @@ from rest_framework import serializers
 from .models import CustomUser, DailyTaskClass
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
+from django.contrib.admin.models import LogEntry, ADDITION
+from django.contrib.contenttypes.models import ContentType
 
 from datetime import datetime
 from usuarios import SENDER
@@ -119,9 +121,17 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                   'is_staff')
 
     def create(self, validated_data):
+        superuser = self.context['request'].user
         user = CustomUser.objects.create(**validated_data)
         user.set_password(validated_data['password'])
         user.save()
+        LogEntry.objects.log_action(
+                user_id=superuser.pk,
+                content_type_id=ContentType.objects.get_for_model(user).pk,
+                object_id=user.pk,
+                object_repr=str(user),
+                action_flag=ADDITION,
+                change_message='Creado por REST API')
         return user
 
 
