@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.core.mail import EmailMessage
 from django.contrib.auth.models import Group
 
-from .models import CustomUser
+from .models import CustomUser, CustomGroup
 from .forms import EmailForm
 from usuarios import SENDER
 
@@ -100,7 +100,7 @@ class CustomUserAdmin(UserAdmin):
     def paid(self, request, queryset):
         try:
             for user in queryset:
-                if user.pagado == False:
+                if user.pagado is False:
                     user.pagado = True
                     user.save()
                     self.log_addition(request, user, 'Modificado pagado.')
@@ -119,7 +119,7 @@ class CustomUserAdmin(UserAdmin):
     def not_paid(self, request, queryset):
         try:
             for user in queryset:
-                if user.pagado == True:
+                if user.pagado is True:
                     user.pagado = False
                     user.save()
                     self.log_addition(request, user, 'Modificado pagado.')
@@ -210,7 +210,7 @@ admin.site.register(CustomUser, CustomUserAdmin)
 
 
 class CustomGroupAdmin(GroupAdmin):
-    model = Group
+    model = CustomGroup
 
     actions = ['send_email']
 
@@ -298,4 +298,4 @@ class CustomGroupAdmin(GroupAdmin):
 
 
 admin.site.unregister(Group)
-admin.site.register(Group, CustomGroupAdmin)
+admin.site.register(CustomGroup, CustomGroupAdmin)
